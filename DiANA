@@ -1,0 +1,56 @@
+# Information -----------------------------------------------------------------
+## Project title --------------------------------------------------------------
+### lisinopril * angioedema
+###Given code is an example, the same methodology was carried out across drugs and adverse events
+
+## Data -----------------------------------------------------------------------
+### FDA Adverse Event Reporting System Quarterly Data
+
+## Version --------------------------------------------------------------------
+### Set up: 2024-06-10
+### Last update: 2024-06-10
+
+# Set up ----------------------------------------------------------------------
+## Load DiAna package ---------------------------------------------------------
+library(DiAna)
+
+## Define project path --------------------------------------------------------
+DiAna_path <- here::here()
+project_path <- paste0(DiAna_path, "/projects/Asees")
+if (!file.exists(project_path)) {
+  dir.create(project_path)
+}
+project_path <- paste0(project_path, "/")
+
+## Define FAERS version -------------------------------------------------------
+FAERS_version <- "23Q4"
+
+# Import FAERS data -----------------------------------------------------------
+import("DRUG")
+import("REAC")
+import("DEMO")
+
+# Filter for US reports only --------------------------------------------------
+US <- "United States of America"
+pids_US <- Demo[reporter_country == US | occr_country == US]$primaryid
+
+# Remove reports with interfering drugs ---------------------------------------
+pids_concomitants <- unique(Drug[substance %in% c("amlodipine", "aliskiren")]$primaryid)
+pids_pop <- setdiff(pids_US, pids_concomitants)
+
+# Define drug and ADR of interest ---------------------------------------------
+drug_selected <- "lisinopril"
+reac_selected <- "angioedema"  # You can extend this to include related terms
+
+# Run disproportionality analysis ---------------------------------------------
+temp <- disproportionality_analysis(
+  drug_selected,
+  reac_selected,
+  restriction = pids_pop
+)
+
+# View signal strength --------------------------------------------------------
+temp$label_IC  # Example output: "4.39 (4.35-4.42) [6881]"
+
+# Optional: Save results and generate forest plot -----------------------------
+render_forest(temp)
