@@ -1,0 +1,51 @@
+# ADR-Genetics-ACE
+
+## Genetic Underpinnings of Adverse Drug Reactions (ADRs) in ACE Inhibitors
+
+This repository supports the manuscript titled **"Genetic underpinnings of adverse events across populations: the case of Anti-Hypertensive Drugs"**, authored by Anoop Kumar, Asees Singh, and Chinmay Arora. The study investigates the genetic basis of adverse drug reactions (ADRs) to ACE inhibitors across populations in the United States, Canada, and the United Kingdom.
+
+---
+
+## 🧬 Overview
+
+ACE inhibitors are widely prescribed for hypertension, yet their adverse reaction profiles vary across populations. This project explores whether genetic variation can explain these differences using pharmacogenomic and bioinformatic analyses.
+
+---
+
+## 📊 Objectives
+
+- Identify unlisted ADRs for ACE inhibitors using OpenVigil and FAERS data.
+- Perform disproportionality analysis to detect statistically significant ADRs.
+- Map ADRs to pathophysiological pathways and associated genes.
+- Analyze SNPs and allele frequencies across populations.
+- Correlate organ-specific gene expression with ADR prevalence.
+
+---
+
+## 🧪 Methodology
+
+The pipeline includes:
+
+1. **Drug Selection**: Lisinopril, Ramipril, Enalapril, Perindopril.
+2. **ADR Identification**: Using OpenVigil and SMPCs.
+3. **Disproportionality Analysis**: Via DiANA and ggplot2 in R.
+4. **Genetic Mapping**: KEGG, NCBI Variation Browser, 1000 Genomes.
+5. **Population SNP Analysis**: Custom scripts (Gemini AI-assisted).
+6. **Gene Localization**: Human Protein Atlas.
+7. **Correlation Analysis**: Pearson correlation between ADRs and gene expression.
+
+---
+
+## 📁 Repository Structure
+
+```text
+ADR-Genetics-ACE/
+├── scripts/          # Analysis scripts (R, Python)
+├── figures/          # Forest plots and heatmaps
+├── supplementary/    # Supplementary spreadsheet   
+└── README.md         # Project overview
+This repository is made available for non-commercial research purposes. Please refer to the manuscript for data availability and ethical considerations.
+For questions or collaborations, contact the corresponding author:
+
+Anoop Kumar
+📧 anoopdpsru@dpsru.edu.in
