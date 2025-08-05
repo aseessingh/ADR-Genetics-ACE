@@ -1,0 +1,43 @@
+import time
+import csv
+
+# Fetches allele frequency data for SNPs across US, UK, and Canadian populations
+def fetch_and_process_snp_data(rsid_list, gene_name):
+    US_chars = [...]
+    UK_chars = [...]
+    CAN_chars = [...]
+    populations = US_chars + UK_chars + CAN_chars
+
+    def fetch_snp_data(rsid_list):
+        server = "https://rest.ensembl.org"
+        REN = {}
+        for rsid in rsid_list:
+            ext = f"/variation/human/{rsid}?pops=1"
+            url = f"{server}/{ext}"
+            try:
+                response = requests.get(url, headers={"Content-Type": "application/json"}, timeout=10)
+                response.raise_for_status()
+                data = response.json()
+                ancestral_allele = data.get("ancestral_allele", None)
+                filtered_data = [pop for pop in data.get("populations", []) if pop.get("population") in populations]
+                REN[rsid] = {"ancestral_allele": ancestral_allele, "populations": filtered_data}
+                time.sleep(1)
+            except:
+                REN[rsid] = {"ancestral_allele": None, "populations": []}
+        return REN
+
+    def process_sublists(REN):
+        results = []
+        for rsid, data in REN.items():
+            ancestral_allele = data["ancestral_allele"]
+            sublist_data = data["populations"]
+            # Filter and calculate dominant allele per region
+            ...
+            results.append([rsid, ancestral_allele, US_max_allele, UK_max_allele, CAN_max_allele])
+        with open(f"{gene_name}.csv", "w", newline="") as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(["RSID", "Ancestral Allele", "US Allele", "UK Allele", "CAN Allele"])
+            writer.writerows(results)
+
+    REN = fetch_snp_data(rsid_list)
+    process_sublists(REN)
