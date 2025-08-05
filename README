@@ -35,15 +35,6 @@ The pipeline includes:
 7. **Correlation Analysis**: Pearson correlation between ADRs and gene expression.
 
 ---
-
-## 📁 Repository Structure
-
-```text
-ADR-Genetics-ACE/
-├── scripts/          # Analysis scripts (R, Python)
-├── figures/          # Forest plots and heatmaps
-├── supplementary/    # Supplementary spreadsheet   
-└── README.md         # Project overview
 This repository is made available for non-commercial research purposes. Please refer to the manuscript for data availability and ethical considerations.
 For questions or collaborations, contact the corresponding author:
 
