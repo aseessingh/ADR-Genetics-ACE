@@ -1,0 +1,20 @@
+from Bio import Entrez
+Entrez.email = "aseessingh4@gmail.com"
+
+# Maps RSIDs to gene names using Entrez API
+def fetch_gene_info(rsid):
+    try:
+        record = Entrez.read(Entrez.elink(dbfrom="snp", id=rsid.replace('rs', ''), db="gene"))
+        if not record[0]['LinkSetDb']:
+            return None
+        genes = []
+        for gene_id_dict in record[0]['LinkSetDb'][0]['Link']:
+            gene_id = gene_id_dict['Id']
+            handle = Entrez.esummary(db="gene", id=gene_id)
+            uid_record = Entrez.read(handle)
+            handle.close()
+            uid_summary = uid_record["DocumentSummarySet"]['DocumentSummary'][0]
+            genes.append(uid_summary['Name'])
+        return genes
+    except:
+        return None
