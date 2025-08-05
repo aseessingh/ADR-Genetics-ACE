@@ -1,0 +1,20 @@
+import csv
+import pandas as pd
+
+# Removes rows containing known ADRs from a CSV file
+def remove_rows_with_elements(filename, elements):
+    with open(filename, 'r+') as file:
+        reader = csv.reader(file)
+        lines = list(reader)
+        rows_to_remove = [i for i, row in enumerate(lines) if any(element in row for element in elements)]
+        for i in reversed(rows_to_remove):
+            del lines[i]
+        file.seek(0)
+        writer = csv.writer(file)
+        writer.writerows(lines)
+
+# Filters rows where 'is_ADR' column is marked 'Yes'
+def filter_true_adrs(input_file, output_file):
+    df = pd.read_csv(input_file)
+    filtered_df = df[df["is_ADR"] == "Yes"]
+    filtered_df.to_csv(output_file, index=False)
