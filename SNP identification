@@ -1,0 +1,40 @@
+import csv
+import requests
+
+# Splits compound entries (e.g., a/b/c) into separate rows and removes duplicates
+def split_and_remove_duplicates(filename):
+    with open(filename, 'r+') as file:
+        reader = csv.reader(file)
+        lines = list(reader)
+        new_lines = []
+        for row in lines:
+            for element in row:
+                if '/' in element:
+                    new_lines.extend([[sub.strip()] for sub in element.split('/')])
+                else:
+                    new_lines.append([element.strip()])
+        unique_lines = []
+        for line in new_lines:
+            if line not in unique_lines:
+                unique_lines.append(line)
+        file.seek(0)
+        writer = csv.writer(file)
+        writer.writerows(unique_lines)
+
+# Retrieves SNPs for a list of gene symbols from Ensembl REST API
+def get_snps_for_genes(gene_symbols):
+    server = "https://rest.ensembl.org"
+    gene_data = []
+    for gene in gene_symbols:
+        ext = f"/variation/human/{gene}?content-type=application/json"
+        r = requests.get(server+ext, headers={ "Content-Type" : "application/json"})
+        if r.status_code == 200:
+            try:
+                data = r.json()
+                rsids = [v["name"] for v in data["variations"] if "name" in v and v["name"].startswith("rs")]
+                gene_data.append({"gene_name": gene, "rsid_list": ",".join(rsids)})
+            except:
+                gene_data.append({"gene_name": gene, "rsid_list": "N/A"})
+        else:
+            gene_data.append({"gene_name": gene, "rsid_list": "N/A"})
+    return gene_data
